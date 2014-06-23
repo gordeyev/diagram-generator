@@ -70,7 +70,7 @@
 			}
 
 			function getPercent(x, y) {
-				return x/y*100 | 0;
+				return Math.round(x/y*100);
 			}
 
 			function getParagraph() {
@@ -84,8 +84,7 @@
 			$("#img-wrapper").click(function(e){
 				var x = e.pageX - $("#img-wrapper").position().left;
 				var y = e.pageY - $("#img-wrapper").position().top;
-				// var percentX = x/$("#img-wrapper").width()*100 | 0;
-				// var percentY = y/$("#img-wrapper").height()*100 | 0;
+
 				if (clickNumber == 0){
 					x1 = x;
 					y1 = y;
@@ -101,12 +100,8 @@
 					$("#rectangles").append('<div class="rectangle-el" style="width: {0}px; height: {1}px; margin-left: {2}px; margin-top: {3}px;" title="x1 = {4}%; y1 = {5}%; x2 = {6}%; y2 = {7}%;"></div>'.format(rectangleWidth, rectangleHeight, x1, y1, getPercent(x1, imageSize[0]), getPercent(y1, imageSize[1]), getPercent(x2, imageSize[0]), getPercent(y2, imageSize[1])));
 					console.log(x);
 					$("ol#xy").append('<li>x1 = {0}%; y1 = {1}%; x2 = {2}%; y2 = {3}%;<span class="remove-item">(remove)</span></li>'.format(getPercent(x1, imageSize[0]), getPercent(y1, imageSize[1]), getPercent(x2, imageSize[0]), getPercent(y2, imageSize[1])));
-					// $("ol#xy").append("<li>x1: {0}%; y1: {1}%; x2 = {2}%; y2 ={3}%;<span class='remove-item'>(remove)</span></li>".format(1, 2, 2, 3);
 				}
-				// $("#pos-x").text("x");
-				// $("#percent-x").text(percentX);
-				// $("#pos-y").text(y);
-				// $("#percent-y").text(percentY);
+
 				
 				console.log(allElements);
 			});
@@ -159,6 +154,7 @@
 				var areaText = '';
 				var arrayLength = allElements.length;
 				for ( var i = 0; i < arrayLength; i++) {
+					var firstSymbol = '';
 					var leftIndent = 0;
 					var topIndent = 0;
 					var elWidth = 0;
@@ -167,23 +163,21 @@
 					var oneArea = '';
 					var paragraph = getParagraph();
 					if (i == 0){
+						firstSymbol = '';
 						leftIndent = getPercent(allElements[0][0][0], imageSize[0]);
 						topIndent = getPercent(allElements[0][0][1], imageSize[1]);
 						elWidth = getPercent(allElements[0][1][0] - allElements[0][0][0], imageSize[0]);
 						elHeight = getPercent(allElements[0][1][1] - allElements[0][0][1], imageSize[1]);
-
-						oneArea = '<area left="' + leftIndent + '" top="' + topIndent + '" width="' + elWidth + '" height="' + elHeight + '" action="diagram' + paragraph + '_1" percent="yes"/>';
 					} else {
+						firstSymbol = '\n';
 						leftIndent = getPercent( findLeft(allElements, allElements[i][0][0], allElements[i][0][1], allElements[i][1][1] )[1], imageSize[0] );
 						topIndent = getPercent( findTop(allElements, allElements[i][0][1], allElements[i][0][0], allElements[i][1][0] )[1], imageSize[1] );
 						elWidth = getPercent(allElements[i][1][0] - allElements[i][0][0], imageSize[0]);
 						elHeight = getPercent(allElements[i][1][1] - allElements[i][0][1], imageSize[1]);
-
-						oneArea = '\n<area left="' + leftIndent + '" top="' + topIndent + '" width="' + elWidth + '" height="' + elHeight + '" action="diagram' + paragraph + '_' + (i + 1) + '" percent="yes"/>';
 					}
+					oneArea = '{0}<area left="{1}" top="{2}" width="{3}" height="{4}" action="diagram{5}_{6}" percent="yes"/>'.format(firstSymbol, leftIndent, topIndent, elWidth, elHeight, paragraph, i + 1);
 					areaText += oneArea;
 				}
-				//<area left="1" top="1" width="24" height="10" action="diagram11_2" percent="yes"/>
 				$("#area-generator textarea").text(areaText);
 			});
 		});
