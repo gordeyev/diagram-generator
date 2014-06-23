@@ -69,8 +69,8 @@
 				$("#img-size").html("Ширина: " + width + "<br>Высота: " + height);
 			}
 
-			function getPercent(x) {
-				return x/$("#img-wrapper").width()*100 | 0;
+			function getPercent(x, y) {
+				return x/y*100 | 0;
 			}
 
 			function getParagraph() {
@@ -98,9 +98,9 @@
 					allElements.push([[x1, y1],[x2, y2]]);
 					var rectangleWidth = x2 - x1;
 					var rectangleHeight = y2 - y1;
-					$("#rectangles").append('<div class="rectangle-el" style="width: {0}px; height: {1}px; margin-left: {2}px; margin-top: {3}px;" title="x1 = {4}%; y1 = {5}%; x2 = {6}%; y2 = {7}%;"></div>'.format(rectangleWidth, rectangleHeight, x1, y1, getPercent(x1), getPercent(y1), getPercent(x2), getPercent(y2)));
+					$("#rectangles").append('<div class="rectangle-el" style="width: {0}px; height: {1}px; margin-left: {2}px; margin-top: {3}px;" title="x1 = {4}%; y1 = {5}%; x2 = {6}%; y2 = {7}%;"></div>'.format(rectangleWidth, rectangleHeight, x1, y1, getPercent(x1, imageSize[0]), getPercent(y1, imageSize[1]), getPercent(x2, imageSize[0]), getPercent(y2, imageSize[1])));
 					console.log(x);
-					$("ol#xy").append('<li>x1 = {0}%; y1 = {1}%; x2 = {2}%; y2 = {3}%;<span class="remove-item">(remove)</span></li>'.format(getPercent(x1), getPercent(y1), getPercent(x2), getPercent(y2)));
+					$("ol#xy").append('<li>x1 = {0}%; y1 = {1}%; x2 = {2}%; y2 = {3}%;<span class="remove-item">(remove)</span></li>'.format(getPercent(x1, imageSize[0]), getPercent(y1, imageSize[1]), getPercent(x2, imageSize[0]), getPercent(y2, imageSize[1])));
 					// $("ol#xy").append("<li>x1: {0}%; y1: {1}%; x2 = {2}%; y2 ={3}%;<span class='remove-item'>(remove)</span></li>".format(1, 2, 2, 3);
 				}
 				// $("#pos-x").text("x");
@@ -174,8 +174,8 @@
 
 						oneArea = '<area left="' + leftIndent + '" top="' + topIndent + '" width="' + elWidth + '" height="' + elHeight + '" action="diagram' + paragraph + '_1" percent="yes"/>';
 					} else {
-						leftIndent = getPercent( findLeft(allElements, allElements[i][0][0], allElements[i][0][1], allElements[i][1][1] )[1] );
-						topIndent = getPercent( findTop(allElements, allElements[i][0][1], allElements[i][0][0], allElements[i][1][0] )[1] );
+						leftIndent = getPercent( findLeft(allElements, allElements[i][0][0], allElements[i][0][1], allElements[i][1][1] )[1], imageSize[0] );
+						topIndent = getPercent( findTop(allElements, allElements[i][0][1], allElements[i][0][0], allElements[i][1][0] )[1], imageSize[1] );
 						elWidth = (allElements[i][1][0] - allElements[i][0][0])/imageSize[0]*100 | 0;
 						elHeight = (allElements[i][1][1] - allElements[i][0][1])/imageSize[0]*100 | 0;
 
@@ -247,12 +247,11 @@
 	<div class="wrapper container">
 		<nav class="navbar navbar-default">
 		    <ul class="nav navbar-nav">
-		        <li><a href="/diagram-generator/">Высота по ширине</a></li>
-		        <li class="active"><a href="/diagram-generator/there-is-height.html">Высота по высоте</a></li>			
+		        <li><a href="index.html">Высота по ширине</a></li>
+		        <li class="active"><a href="there-is-height.html">Высота по высоте</a></li>			
 		    </ul>
 		</nav>
-	 <h1> Скоро будет</h1>
-	<!--	<div class="upload">
+		<div class="upload">
 			<form id="form1" runat="server">
 			    <input type='file' id="imgInp" />
 			    <div id="img-wrapper"><div id="rectangles"></div><img id="blah" src="#" alt="your image" /></div>
@@ -267,7 +266,13 @@
 			<br>
 			<div id="dot-list">
 				<ol id="xy">
-	
+	<!-- 				X: <span id="pos-x"></span>
+					<br>
+					Y: <span id="pos-y"></span>
+					<br>
+					%X: <span id="percent-x"></span>
+					<br>
+					%Y: <span id="percent-y"></span> -->
 				</ol>
 			</div>
 		</div>
@@ -277,7 +282,7 @@
 			<textarea  class="form-control"></textarea>
 			<br>
 			<button class="btn btn-primary">Сгенерировать area <i class="icon-white icon-refresh"></i></button>
-		</div>-->
+		</div>
 	</div>
 
 </body>
