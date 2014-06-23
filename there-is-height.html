@@ -167,17 +167,17 @@
 					var oneArea = '';
 					var paragraph = getParagraph();
 					if (i == 0){
-						leftIndent = allElements[0][0][0]/imageSize[0]*100 | 0;
-						topIndent = allElements[0][0][1]/imageSize[0]*100 | 0;
-						elWidth = (allElements[0][1][0] - allElements[0][0][0])/imageSize[0]*100 | 0;
-						elHeight = (allElements[0][1][1] - allElements[0][0][1])/imageSize[0]*100 | 0;
+						leftIndent = getPercent(allElements[0][0][0], imageSize[0]);
+						topIndent = getPercent(allElements[0][0][1], imageSize[1]);
+						elWidth = getPercent(allElements[0][1][0] - allElements[0][0][0], imageSize[0]);
+						elHeight = getPercent(allElements[0][1][1] - allElements[0][0][1], imageSize[1]);
 
 						oneArea = '<area left="' + leftIndent + '" top="' + topIndent + '" width="' + elWidth + '" height="' + elHeight + '" action="diagram' + paragraph + '_1" percent="yes"/>';
 					} else {
 						leftIndent = getPercent( findLeft(allElements, allElements[i][0][0], allElements[i][0][1], allElements[i][1][1] )[1], imageSize[0] );
 						topIndent = getPercent( findTop(allElements, allElements[i][0][1], allElements[i][0][0], allElements[i][1][0] )[1], imageSize[1] );
-						elWidth = (allElements[i][1][0] - allElements[i][0][0])/imageSize[0]*100 | 0;
-						elHeight = (allElements[i][1][1] - allElements[i][0][1])/imageSize[0]*100 | 0;
+						elWidth = getPercent(allElements[i][1][0] - allElements[i][0][0], imageSize[0]);
+						elHeight = getPercent(allElements[i][1][1] - allElements[i][0][1], imageSize[1]);
 
 						oneArea = '\n<area left="' + leftIndent + '" top="' + topIndent + '" width="' + elWidth + '" height="' + elHeight + '" action="diagram' + paragraph + '_' + (i + 1) + '" percent="yes"/>';
 					}
