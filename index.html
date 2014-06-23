@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="diagram-generator : " />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>diagram-generator</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/vshtangu/diagram-generator">View on GitHub</a>
+
+          <h1 id="project_title">diagram-generator</h1>
+          <h2 id="project_tagline"></h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/vshtangu/diagram-generator/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/vshtangu/diagram-generator/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p>&lt;!Doctype html&gt;
+
+</p>
+    Определение точек картинки<pre><code>&lt;script src="http://code.jquery.com/jquery-1.11.1.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript"&gt;
+    $(document).ready(function(){
+        function readURL(input) {
+
+            if (input.files &amp;&amp; input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    $('#blah').attr('src', e.target.result);
+                    showImgSize();
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            }
+
+        }
+
+
+        $("#imgInp").change(function(){
+            readURL(this);
+
+        });
+</code></pre>
+
+<p>//*************************************************************************************
+            String.prototype.format = String.prototype.f = function() {
+                var s = this,
+                    i = arguments.length;</p>
+
+<pre><code>            while (i--) {
+                s = s.replace(new RegExp('\\{' + i + '\\}', 'gm'), arguments[i]);
+            }
+            return s;
+        };
+</code></pre>
+
+<p>//*************************************************************************************
+            var clickNumber = 0;
+            var allElements = [];
+            var x1 = 0;
+            var y1 = 0;
+            var x2 = 0;
+            var y2 = 0;
+            var imageSize = [0, 0];</p>
+
+<pre><code>        function isIntervalsCrosseds(a1, a2, b1, b2){
+            if ( ((a1 &lt; b1) &amp;&amp; ( a2 &gt; b1)) || ((a1 &gt; b1) &amp;&amp; (a1 &lt; b2)) ) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+
+
+        function showImgSize(){
+            var height =  $("#img-wrapper").height();
+            var width = $("#img-wrapper").width();
+            imageSize[0] = width;
+            imageSize[1] = height;
+            $("#img-size").html("Ширина: " + width + "&lt;br&gt;Высота: " + height);
+        }
+
+        function getPercent(x) {
+            return x/$("#img-wrapper").width()*100 | 0;
+        }
+
+        function getParagraph() {
+            paragraph = $("#area-generator input").val();
+            return paragraph;
+        }
+
+
+
+
+        $("#img-wrapper").click(function(e){
+            var x = e.pageX - $("#img-wrapper").position().left;
+            var y = e.pageY - $("#img-wrapper").position().top;
+            // var percentX = x/$("#img-wrapper").width()*100 | 0;
+            // var percentY = y/$("#img-wrapper").height()*100 | 0;
+            if (clickNumber == 0){
+                x1 = x;
+                y1 = y;
+                clickNumber = 1;
+                console.log(x);
+            } else {
+                x2 = x;
+                y2 = y;
+                clickNumber = 0;
+                allElements.push([[x1, y1],[x2, y2]]);
+                var rectangleWidth = x2 - x1;
+                var rectangleHeight = y2 - y1;
+                $("#rectangles").append('&lt;div class="rectangle-el" style="width: {0}px; height: {1}px; margin-left: {2}px; margin-top: {3}px;" title="x1 = {4}%; y1 = {5}%; x2 = {6}%; y2 = {7}%;"&gt;&lt;/div&gt;'.format(rectangleWidth, rectangleHeight, x1, y1, getPercent(x1), getPercent(y1), getPercent(x2), getPercent(y2)));
+                console.log(x);
+                $("ol#xy").append('&lt;li&gt;x1 = {0}%; y1 = {1}%; x2 = {2}%; y2 = {3}%;&lt;span class="remove-item"&gt;(remove)&lt;/span&gt;&lt;/li&gt;'.format(getPercent(x1), getPercent(y1), getPercent(x2), getPercent(y2)));
+                // $("ol#xy").append("&lt;li&gt;x1: {0}%; y1: {1}%; x2 = {2}%; y2 ={3}%;&lt;span class='remove-item'&gt;(remove)&lt;/span&gt;&lt;/li&gt;".format(1, 2, 2, 3);
+            }
+            // $("#pos-x").text("x");
+            // $("#percent-x").text(percentX);
+            // $("#pos-y").text(y);
+            // $("#percent-y").text(percentY);
+
+            console.log(allElements);
+        });
+
+        $(document).on('click', ".remove-item",function(){
+            var thisIndex = $(this).parent().index();
+            console.log(allElements);
+            allElements.splice(thisIndex, 1);
+            console.log(allElements);
+            $(this).parent().remove();
+            $("#rectangles").children().eq(thisIndex).remove();
+        });
+
+
+        function findLeft(listOfRectangles, x, y1, y2) {
+            var listLength = listOfRectangles.length;
+            var foundIndex = -1;
+            var distance = x;
+            for (i = 0; i &lt; listLength; i++) {
+                if ( isIntervalsCrosseds(listOfRectangles[i][0][1], listOfRectangles[i][1][1], y1, y2) ) {
+                    var thisDistance = x - listOfRectangles[i][1][0];
+                    if ( ( thisDistance &gt; 0 ) &amp;&amp; ( thisDistance &lt; distance) ) {
+                        distance = thisDistance;
+                        foundIndex = i;
+                    }
+                }
+            }
+            console.log(distance);
+            return [i, distance];
+        }
+
+        function findTop(listOfRectangles, y, x1, x2) {
+            var listLength = listOfRectangles.length;
+            var foundIndex = -1;
+            var distance = y;
+            for (i = 0; i &lt; listLength; i++) {
+                if ( isIntervalsCrosseds(listOfRectangles[i][0][0], listOfRectangles[i][1][0], x1, x2) ) {
+                    var thisDistance = y - listOfRectangles[i][1][1];
+                    if ( ( thisDistance &gt; 0 ) &amp;&amp; ( thisDistance &lt; distance) ) {
+                        distance = thisDistance;
+                        foundIndex = i;
+                    }
+                }
+            }
+            console.log(distance);
+            return [i, distance];
+        }
+
+        $("#area-generator button").click(function(){
+            var areaText = '';
+            var arrayLength = allElements.length;
+            for ( var i = 0; i &lt; arrayLength; i++) {
+                var leftIndent = 0;
+                var topIndent = 0;
+                var elWidth = 0;
+                var elHeight = 0;
+
+                var oneArea = '';
+                var paragraph = getParagraph();
+                if (i == 0){
+                    leftIndent = allElements[0][0][0]/imageSize[0]*100 | 0;
+                    topIndent = allElements[0][0][1]/imageSize[0]*100 | 0;
+                    elWidth = (allElements[0][1][0] - allElements[0][0][0])/imageSize[0]*100 | 0;
+                    elHeight = (allElements[0][1][1] - allElements[0][0][1])/imageSize[0]*100 | 0;
+
+                    oneArea = '&lt;area left="' + leftIndent + '" top="' + topIndent + '" width="' + elWidth + '" height="' + elHeight + '" action="diagram' + paragraph + '_1" percent="yes"/&gt;';
+                } else {
+                    leftIndent = getPercent( findLeft(allElements, allElements[i][0][0], allElements[i][0][1], allElements[i][1][1] )[1] );
+                    topIndent = getPercent( findTop(allElements, allElements[i][0][1], allElements[i][0][0], allElements[i][1][0] )[1] );
+                    elWidth = (allElements[i][1][0] - allElements[i][0][0])/imageSize[0]*100 | 0;
+                    elHeight = (allElements[i][1][1] - allElements[i][0][1])/imageSize[0]*100 | 0;
+
+                    oneArea = '\n&lt;area left="' + leftIndent + '" top="' + topIndent + '" width="' + elWidth + '" height="' + elHeight + '" action="diagram' + paragraph + '_' + (i + 1) + '" percent="yes"/&gt;';
+                }
+                areaText += oneArea;
+            }
+            //&lt;area left="1" top="1" width="24" height="10" action="diagram11_2" percent="yes"/&gt;
+            $("#area-generator textarea").text(areaText);
+        });
+    });
+
+&lt;/script&gt;
+&lt;link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css"&gt;
+&lt;link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css"&gt;
+&lt;style type="text/css"&gt;
+    .upload{
+        float: top;
+        min-height: 70px;
+    }
+    #form1{
+        float: top;
+    }
+    #img-wrapper{
+        float: left;
+        outline: 1px solid #fff;
+        border: 1px solid #000;
+        cursor: crosshair;
+    }
+    #img-info{
+        float: right;
+        width: 160px
+    }
+    #img-size{
+        width: 160px;
+    }
+    #dot-list{
+        width: 360px;
+        min-height: 10px;
+        background-color: yellow;
+    }
+    .remove-item{
+        color: red;
+        cursor: pointer;
+    }
+    .remove-item:hover{
+        text-decoration: underline;
+    }
+    #area-generator{
+        float: top;
+        padding-top: 20px;
+    }
+    #area-generator input{
+        width: 30px;
+    }
+    #rectangles{
+        position: absolute;
+    }
+    .rectangle-el{
+        position: absolute;
+        opacity: 0.3;
+        border: 1px solid #000;
+        background-color: blue;
+    }
+&lt;/style&gt;
+</code></pre>
+
+<p>
+</p>
+    <div>
+        <div>
+            
+                <div>
+<div></div>
+<img src="#" alt="your image">
+</div>
+            
+        </div>
+
+<pre><code>    &lt;div id="img-info"&gt;
+        &lt;div id="img-size"&gt;
+
+        &lt;/div&gt;
+        &lt;br&gt;
+        &lt;br&gt;
+        &lt;div id="dot-list"&gt;
+            &lt;ol id="xy"&gt;
+&lt;!--                X: &lt;span id="pos-x"&gt;&lt;/span&gt;
+                &lt;br&gt;
+                Y: &lt;span id="pos-y"&gt;&lt;/span&gt;
+                &lt;br&gt;
+                %X: &lt;span id="percent-x"&gt;&lt;/span&gt;
+                &lt;br&gt;
+                %Y: &lt;span id="percent-y"&gt;&lt;/span&gt; --&gt;
+            &lt;/ol&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+
+    &lt;div id="area-generator" class="col-md-12"&gt;
+        Имя: diagram&lt;input type="text"&gt;_n
+        &lt;textarea  class="form-control"&gt;&lt;/textarea&gt;
+        &lt;br&gt;
+        &lt;button class="btn btn-primary"&gt;Сгенерировать area &lt;i class="icon-white icon-refresh"&gt;&lt;/i&gt;&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+</code></pre>
+
+<p>
+</p>
+</div>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">diagram-generator maintained by <a href="https://github.com/vshtangu">vshtangu</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
