@@ -99,7 +99,7 @@
 					var rectangleHeight = y2 - y1;
 					$("#rectangles").append('<div class="rectangle-el" style="width: {0}px; height: {1}px; margin-left: {2}px; margin-top: {3}px;" title="x1 = {4}%; y1 = {5}%; x2 = {6}%; y2 = {7}%;"></div>'.format(rectangleWidth, rectangleHeight, x1, y1, getPercent(x1, imageSize[0]), getPercent(y1, imageSize[1]), getPercent(x2, imageSize[0]), getPercent(y2, imageSize[1])));
 					console.log(x);
-					$("ol#xy").append('<li>x1 = {0}%; y1 = {1}%; x2 = {2}%; y2 = {3}%;<span class="remove-item">(remove)</span></li>'.format(getPercent(x1, imageSize[0]), getPercent(y1, imageSize[1]), getPercent(x2, imageSize[0]), getPercent(y2, imageSize[1])));
+					$("ol#xy").append('<li><span class="remove-item">(remove)</span>x1 = {0}%; y1 = {1}%; x2 = {2}%; y2 = {3}%;</li>'.format(getPercent(x1, imageSize[0]), getPercent(y1, imageSize[1]), getPercent(x2, imageSize[0]), getPercent(y2, imageSize[1])));
 				}
 
 				
